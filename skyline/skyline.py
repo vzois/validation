@@ -58,7 +58,42 @@ def DT(p,q):
     
     return ~qb & pb
 
-def skyline(window,points):
+def BNL(points):
+    sky=[0]
+
+    for i in range(1,len(points)):
+        q = points[i]
+        dt = False
+        rm = list()
+        #print sky
+        #sky = [sky[j] for j in range(len(sky)) if not DT(q,points[sky[j]]) ]
+        
+        for j in range(len(sky)):
+            p = points[sky[j]]
+            #print p,"<+!",q,
+            if DT(p,q):
+                #print "1 < 2"
+                dt = True
+            elif DT(q,p):
+                #print "2 < 1"
+                rm.append(j)
+            #else:
+            #    print ""
+        #print rm, sky
+        #print "rm:",rm,"sky:",sky
+        sky = [sky[j] for j in range(len(sky)) if j not in rm]
+        #for k in rm:
+        #    #print k
+        #    del sky[k]
+        #    #print "del:",sky
+        if not dt:
+            sky.append(i)
+        
+    return sky       
+            
+        
+
+def kss(window,points):
     x=0
     
     sky = []
@@ -75,8 +110,11 @@ def skyline(window,points):
         if not dt:
             sky.append(j) 
         #print "sky:",sky
-        
+    
+    
+    
     return sky
+
 
 
 r = True
@@ -93,15 +131,15 @@ if r:
     points = [[randValue() for i in range(D)] for j in range(N)]
     rank = [sum(points[i]) for i in range(N)]
     storeRank(rank)
-    print "store rank:",rank
+    #print "store rank:",rank
     storePoints(points)
-    print "store points:",points
+    #print "store points:",points
 else:
     
     rank = loadRank()
-    print "load rank:",rank
+    #print "load rank:",rank
     points = loadPoints(len(rank))
-    print "load points:",points
+    #print "load points:",points
 
 nsmall = nsmallest(k,rank)
 heapK=max(nsmall)
@@ -115,8 +153,12 @@ for i in range(len(rank)):
         window.append(i)
         #print window
 
-sky = skyline(window,points)
-#print sky
+sky = kss(window,points)
+print sky
+
+#print points[0]
+sky = BNL(points)
+print sky
 
     
 
