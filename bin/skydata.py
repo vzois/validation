@@ -46,6 +46,7 @@ def genData(N,D,distr):
 # CREATE CSV FILE
 ##################################
 
+    points=[]
     infile = filename+".bin"
     outfile=filename+".csv"
     f = open(infile,"rb")
@@ -61,13 +62,15 @@ def genData(N,D,distr):
         data=struct.unpack(values*'i',buffer);
         lines = []
     
-        for i in range(0,len(data),D):            
+        for i in range(0,len(data),D):
+            points.append(list(data[i:i+D]))            
             lines.append(",".join([str(v) for v in data[i:i+D]]))
             lines.append("\n")
         fw.writelines(lines)
         buffer = f.read(point_num*D)
     f.close()
     fw.close()
+    return points
 
 genData(N,D,distr)
 
