@@ -1,46 +1,49 @@
 import os
 import struct
 
-def loadRank():
-    rank=[]
-    f = open("rank.bin","rb")
-    bytes = f.read(1024)
-    while bytes:
-        count = len(bytes)/4
-        num=struct.unpack(count*'i',bytes);
-        rank = rank + list(num)
-        bytes = f.read(16)
-    #print rank
-    f.close()
-    return rank
-
-def loadPoints(N):
-    points = []
-    #print os.path.getsize("points.bin")
-    
-    D = (os.path.getsize("points.bin")/4)/N
-    #print "dimension:",D
-    
-    f = open("points.bin","rb")
-    bytes = f.read(4*D)
-    
-    while bytes:
-         num=struct.unpack(D*'i',bytes);
-         #print num
-         bytes = f.read(4*D)
-         points = points + [list(num)]
-    f.close()
-    return points
-
-def storeRank(rank):
+def storeRank(rank,num):
     f = open("rank.bin","wb")
+    
+    num = 0;
+    shf = 4 << 2
+    mD = 0xF << shf
+    mN = 0x0
+    
+    for i in range(1024):
+        f.write(struct.pack('i', 0x0))
+        
     for r in rank:
         f.write(struct.pack('i', r))
+    
+    f.write(struct.pack('i', num))
+    f.write(struct.pack('i', shf))
+    f.write(struct.pack('i', mD))
+    f.write(struct.pack('i', mN))
+    
+    #for i in range(0,17):
+    #    f.write(struct.pack('i', i))
+    #f.write(struct.pack('i', num))
     f.close()
-
-def storePoints(points):
+    
+def storePoints(points,rank,window,pstop):
     f = open("points.bin","wb")
+    
+    f.write(struct.pack('i', pstop))
+    for i in range(1023):
+        f.write(struct.pack('i', 0x0))
+        
     for p in points:
         for d in p:
             f.write(struct.pack('i', d))
+    
+    for w in window:
+        for v in w:
+            f.write(struct.pack('i', v))
+            
+    for r in rank:
+        f.write(struct.pack('i', r))
+    
+    
     f.close()
+    
+    
