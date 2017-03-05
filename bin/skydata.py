@@ -6,8 +6,10 @@ import time
 N = int(sys.argv[1])
 D = int(sys.argv[2])
 distr = sys.argv[3]
+scale = 1024 * 1024 * 1024
 
 def genData(N,D,distr):
+    global scale
     print time.time()
     filename = "d_"+str(N)+"_"+str(D)+"_"+distr
     print filename
@@ -21,7 +23,7 @@ def genData(N,D,distr):
 ##################################
 # CREATE BINARY FILE
 ##################################
-    scale = 1024*1024 # SCALE VALUES
+    #scale = 1024*1024 # SCALE VALUES
     infile = filename
     outfile=filename+".bin"
     f = open(infile,"r")

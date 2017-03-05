@@ -1,8 +1,8 @@
 #!/bin/sh
 
-_N=$((2 * 1024 * 1024))
+_N=$((16 * 1024 * 1024))
 
-for i in 2 4 8 16
+for i in 8
 do
 	python skydata.py $_N $i c
 	python skydata.py $_N $i i
